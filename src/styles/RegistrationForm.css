@@ -1,0 +1,69 @@
+ /* Стилі для форми реєстрації */
+ .registration-form-container {
+    position: relative;
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .registration-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .registration-close-button:hover {
+    color: red;
+  }
+  
+  .registration-form-group {
+    margin-bottom: 15px;
+  }
+  
+  .registration-form-group label {
+    display: block;
+    font-weight: bold;
+  }
+  
+  .registration-form-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .registration-error-message {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .registration-submit-button {
+    background-color: #007bff; /* Основний колір кнопки */
+    color: white; /* Колір тексту */
+    font-size: 16px; /* Розмір шрифту */
+    padding: 10px; /* Внутрішній відступ */
+    border: none; /* Без обводки */
+    border-radius: 4px; /* Заокруглення країв */
+    cursor: pointer; /* Змінюємо курсор при наведенні */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Анімація */
+  }
+  
+  .registration-submit-button:hover {
+    background-color: #0056b3; /* Колір кнопки при наведенні */
+    transform: scale(1.05); /* Збільшення кнопки при наведенні */
+  }
+  
+  .registration-submit-button:active {
+    background-color: #004494; /* Колір кнопки при натисканні */
+    transform: scale(0.98); /* Зменшення кнопки при натисканні */
+  }
+  

@@ -1,0 +1,24 @@
+/* HomePage.css */
+
+.home-page-main-content {
+  margin-top: 80px; /* Такий самий відступ, як висота хедера */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.products-list {
+  flex-grow: 1;
+  margin-left: 20px; 
+}
+
+.product-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}

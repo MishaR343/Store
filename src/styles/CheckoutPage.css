@@ -1,0 +1,155 @@
+  
+  .progress-bar {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .progress {
+    height: 10px;
+    background-color: #007bff;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+  
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .step {
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .step.active {
+    background-color: #007bff;
+  }
+  
+  .step.completed {
+    background-color: #28a745;
+  }
+  
+  .checkout-content {
+    width: 45%;
+    margin: 25px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .step-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  }
+  
+  .step-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .prev-button, .next-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .prev-button {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .prev-button:hover {
+    background-color: #5a6268;
+  }
+  
+  .next-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .next-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .remove-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  
+  .remove-button:hover {
+    background-color: #c82333;
+  }
+  
+  .cart-items {
+    margin-bottom: 20px;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .cart-item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  
+  .cart-item-details h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .cart-item-details p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .error, .checkout-error {
+    color: #dc3545;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  
+  .success {
+    color: #28a745;
+    margin-bottom: 10px;
+  }

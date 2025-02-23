@@ -1,0 +1,92 @@
+/* Основной контейнер футера */
+.footer {
+  width: 100%; /* Растягиваем на всю ширину экрана */
+  background-color: #68799c;
+  color: white;
+  padding: 10px 0;
+  display:block;
+  flex-direction: column; /* Включаем колоночное расположение */
+  align-items: center; /* Выровнять элементы по центру */
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Контейнер содержимого */
+.footer-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Логотип и описание */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.description {
+  color: #cbd5e0;
+  margin-top: 5px;
+}
+
+/* Навигация */
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-link {
+  color: #cbd5e0;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+/* Контактная информация */
+.contact-info {
+  color: #cbd5e0;
+  margin-top: 5px;
+}
+
+/* Социальные иконки */
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-link {
+  color: #cbd5e0;
+  transition: color 0.3s;
+}
+
+.social-link:hover {
+  color: white;
+}
+
+/* Авторские права */
+.copyright {
+  margin-top: 20px;
+  color: #a0aec0;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}

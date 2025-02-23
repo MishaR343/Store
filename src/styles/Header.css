@@ -1,0 +1,153 @@
+/* Основний стиль для хедера */
+.header {
+  background-color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Верхній банер */
+.top-banner {
+  background-color: #ffcc00;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Контейнер */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+/* Логотип */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 50px;
+}
+
+/* Пошуковий блок */
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.search-button {
+  background-color: #ffcc00;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 0 5px 5px 0;
+  font-weight: bold;
+}
+
+.search-button:hover {
+  background-color: #ff9900;
+}
+
+/* Навігаційне меню */
+.nav {
+  padding: 10px 0;
+  margin-top: 10px;
+}
+
+.nav-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-item {
+  background-color: #ffcc00;
+  padding: 10px 15px;
+  border-radius: 20px 20px 0 20px;
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
+.nav-item:hover {
+  background-color: #ff9900;
+}
+
+/* Іконки */
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.icon img {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---- СТИЛІ ДЛЯ КНОПОК АУТЕНТИФІКАЦІЇ ---- */
+.auth-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+}
+
+.auth-button {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.auth-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.auth-button:active {
+  background-color: #004494;
+  transform: scale(0.98);
+}
+
+.auth-button.logout {
+  background-color: #dc3545;
+}
+
+.auth-button.logout:hover {
+  background-color: #b02a37;
+}
+
+.auth-button.logout:active {
+  background-color: #922128;
+}

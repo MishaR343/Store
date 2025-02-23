@@ -1,0 +1,27 @@
+.warning-modal {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+.warning-modal.hidden {
+  opacity: 0;
+}
+
+.warning-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.warning-modal h2 {
+  color: red; 
+}

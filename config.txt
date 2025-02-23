@@ -1,0 +1,21 @@
+Бібліотека
+    npm install react-router-dom
+    npm install axios
+    npm install eslint prettier eslint-config-prettier eslint-plugin-prettier --save-dev
+    npm install express pg dotenv cors
+    npm install bcrypt
+    npm install @stripe/stripe-js
+    npm install @stripe/react-stripe-js
+    npm install react-hook-form @hookform/resolvers yup
+
+
+docker 
+    docker exec -it mydb psql -U user -d mydb 
+
+
+Basa 
+    http://localhost:5000/api/products
+
+Server 
+    node server.js
+    netstat -ano | findstr :5000
