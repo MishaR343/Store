@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import Stripe from 'stripe';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +20,7 @@ const { Pool } = pkg;
 const app = express();
 const PORT = process.env.PORT || 5000;
 const SALT_ROUNDS = 10;
+const stripe = Stripe(process.env.STRIPE_PK);
 
 // Middleware
 app.use(cors());
@@ -247,30 +249,111 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// 11. Додати у кошик
+app.put('/api/cart/update-quantity', async (req, res) => {
+  console.log(`log`);  // Додати логування
+  const { user_id, product_id, quantity } = req.body;
+
+  try {
+    const cart = await pool.query(
+      'SELECT id FROM carts WHERE user_id = $1',
+      [user_id]
+    );
+
+    if (cart.rows.length === 0) {
+      return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    const cart_id = cart.rows[0].id;
+
+    const existingItem = await pool.query(
+      'SELECT * FROM cart_items WHERE cart_id = $1 AND product_id = $2',
+      [cart_id, product_id]
+    );
+
+    if (existingItem.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found in cart' });
+    }
+
+    await pool.query(
+      'UPDATE cart_items SET quantity = $1 WHERE cart_id = $2 AND product_id = $3',
+      [quantity, cart_id, product_id]
+    );
+
+    res.status(200).json({ message: 'Quantity updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.put('/api/cart/:id', async (req, res) => {
   const { product_id, user_id } = req.body;
-  
+
   try {
+    // Перевіряємо, чи є вже корзина для цього користувача
+    let cart = await pool.query(
+      'SELECT id FROM carts WHERE user_id = $1',
+      [user_id]
+    );
+
+    let cart_id;
+
+    if (cart.rows.length === 0) {
+      // Якщо корзини немає, створюємо її
+      const newCart = await pool.query(
+        'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
+        [user_id]
+      );
+      cart_id = newCart.rows[0].id;
+    } else {
+      cart_id = cart.rows[0].id;
+    }
+
+    // Перевіряємо, чи товар вже є у кошику
     const existingItem = await pool.query(
-      'SELECT * FROM carts WHERE product_id = $1 AND user_id = $2',
-      [product_id, user_id]
+      'SELECT * FROM cart_items WHERE cart_id = $1 AND product_id = $2',
+      [cart_id, product_id]
     );
 
     if (existingItem.rows.length > 0) {
       return res.status(400).json({ error: 'Product already in cart' });
     }
 
+    // Додаємо товар у кошик із quantity = 1
     const result = await pool.query(
-      'INSERT INTO carts (product_id, user_id) VALUES ($1, $2) RETURNING *',
-      [product_id, user_id]
+      'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, 1) RETURNING *',
+      [cart_id, product_id]
     );
 
-    const newCartItem = result.rows[0];
-    res.status(201).json(newCartItem);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// 12. Видалити товар з кошика користувача
+app.delete('/api/cart/rm/:cartId/:productId', async (req, res) => {
+  let { cartId, productId } = req.params;
+
+  if (isNaN(cartId) || isNaN(productId)) {
+    return res.status(400).json({ message: "Invalid cart ID or product ID" });
+  }
+
+  try {
+    const result = await pool.query(
+      'DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2 RETURNING *',
+      [cartId, productId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    res.json({ message: "Product removed from cart", deletedItem: result.rows[0] });
+  } catch (error) {
+    console.error("Error deleting product from cart:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -279,9 +362,10 @@ app.get('/api/cart/:userId', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT p.id, p.name, p.price, p.stock_quantity, p.image_urls  ' + 
-      'FROM products p ' + 
-      'JOIN carts c ON p.id = c.product_id ' + 
+      'SELECT p.id, c.id as cart_id, p.name, p.price, ci.quantity, p.image_urls ' +
+      'FROM products p ' +
+      'JOIN cart_items ci ON p.id = ci.product_id ' + 
+      'JOIN carts c ON ci.cart_id = c.id ' +           
       'WHERE c.user_id = $1',
       [userId]
     );
@@ -322,51 +406,19 @@ app.get('/api/cart/:userId', async (req, res) => {
   }
 });
 
-// 12. Видалити товар з кошика користувача
-app.delete('/api/cart/:userId/:productId', async (req, res) => {
-  let { userId, productId } = req.params;
-
-  if (isNaN(userId) || isNaN(productId)) {
-    return res.status(400).json({ message: "Invalid user ID or product ID" });
-  }
+// 13. Змінити пароль користувача (Зміна пароля проходить тестування) (Додати перевірку пошти на аутифікацію користувача)
+app.put('/api/change-password', async (req, res) => { 
+  const { email, new_password } = req.body;
 
   try {
-    const result = await pool.query(
-      'DELETE FROM carts WHERE user_id = $1 AND product_id = $2 RETURNING *',
-      [userId, productId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "Product not found in cart" });
-    }
-
-    res.json({ message: "Product removed from cart", deletedItem: result.rows[0] });
-  } catch (error) {
-    console.error("Error deleting product from cart:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// 13. Змінити пароль користувача
-app.put('/api/change-password', async (req, res) => {
-  const { user_id, old_password, new_password } = req.body;
-
-  try {
-    const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [user_id]);
+    const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Користувача не знайдено' });
     }
 
-    const user = userResult.rows[0];
-
-    const isOldPasswordValid = await bcrypt.compare(old_password, user.password_hash);
-    if (!isOldPasswordValid) {
-      return res.status(400).json({ success: false, message: 'Невірний старий пароль' });
-    }
-
     const hashedNewPassword = await bcrypt.hash(new_password, SALT_ROUNDS);
 
-    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hashedNewPassword, user_id]);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE email = $2', [hashedNewPassword, email]);
 
     res.json({ success: true, message: 'Пароль успішно змінено' });
   } catch (err) {
@@ -377,12 +429,9 @@ app.put('/api/change-password', async (req, res) => {
 
 // 14. Оформлення замовлення
 app.post('/api/orders', async (req, res) => {
-  console.log("Отримано замовлення:", req.body);
-  const { user_id, cart_items, contactEmail, contactName, contactPhone, shippingAddress, shippingCity, shippingMethod, payment_token, payment_method_id} = req.body;
-  console.log("Дані замовлення:", req.body);
+  const { user_id, cart_items, contactEmail, contactName, contactPhone, shippingAddress, shippingCity, shippingMethod } = req.body;
 
   try {
-    // Розрахунок загальної суми
     let total_price = 0;
     for (const item of cart_items) {
       const product = await pool.query('SELECT price FROM products WHERE id = $1', [item.product_id]);
@@ -392,30 +441,25 @@ app.post('/api/orders', async (req, res) => {
       total_price += product.rows[0].price * item.quantity;
     }
 
-    // Створення замовлення
     const orderResult = await pool.query(
       'INSERT INTO orders (user_id, order_date, status, total_price) VALUES ($1, CURRENT_TIMESTAMP, $2, $3) RETURNING *',
       [user_id, 'processing', total_price]
     );
-
     const order = orderResult.rows[0];
-
-    // Додавання елементів замовлення
+    
     for (const item of cart_items) {
       const product = await pool.query('SELECT price FROM products WHERE id = $1', [item.product_id]);
       await pool.query(
         'INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ($1, $2, $3, $4)',
-        [order.id, item.product_id, item.quantity, product.rows[0].price]
+        [order.id, item.product_id, item.quantity, product.rows[0].price] ////////////////////////////////////
       );
     }
-
-    // Заповнення таблиці order_info
+    
     await pool.query(
-      'INSERT INTO order_info (order_id, contact_email, contact_name, contact_phone, shipping_address, shipping_city, shipping_method, payment_token, payment_method_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-      [order.id, contactEmail, contactName, contactPhone, shippingAddress, shippingCity, shippingMethod, payment_token, payment_method_id]
+      'INSERT INTO order_info (order_id, contact_email, contact_name, contact_phone, shipping_address, shipping_city, shipping_method) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [order.id, contactEmail, contactName, contactPhone, shippingAddress, shippingCity, shippingMethod]
     );
 
-    // Очищення кошика користувача
     await pool.query('DELETE FROM carts WHERE user_id = $1', [user_id]);
 
     res.status(201).json({
@@ -423,6 +467,7 @@ app.post('/api/orders', async (req, res) => {
       message: 'Замовлення успішно оформлено!',
       order_id: order.id,
     });
+    
   } catch (err) {
     console.error('Помилка оформлення замовлення:', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -455,6 +500,52 @@ app.get('/api/orders/:userId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    const { order_id } = req.body; // Деструктуруємо order_id з тіла запиту
+
+    if (!order_id) { // Перевірка на наявність order_id, а не user_id
+      return res.status(400).json({ error: 'Order ID обов\'язковий' });
+    }
+
+    // Отримуємо товари з корзини користувача
+    const cartItems = await pool.query(
+      `SELECT id, quantity, unit_price
+       FROM order_items
+       WHERE order_id = $1`,
+      [order_id]
+    );
+
+    if (cartItems.rows.length === 0) {
+      return res.status(400).json({ error: 'Кошик порожній' });
+    }
+
+    // Формуємо line_items для Stripe
+    const lineItems = cartItems.rows.map(item => ({
+      price: item.unit_price, // Виправлено на unit_price
+      quantity: item.quantity,
+    }));
+console.log(lineItems);
+    // Створюємо сесію Stripe Checkout
+    const session = await Stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${"http://localhost:3000/cart/confirmation-page"}?success=true`,
+      cancel_url: `${"http://localhost:3000"}?canceled=true`,
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Помилка при оформленні Stripe checkout:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 
 // Запуск сервера
 app.listen(PORT, () => {

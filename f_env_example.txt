@@ -1,0 +1,2 @@
+# Налаштування Stripe
+REACT_APP_STRIPE_PK= Publishable key  (Приклад:pk_test_12345ABCDEfgHIJKLMN67890)

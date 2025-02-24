@@ -10,22 +10,21 @@ const AuthProvider = ({ children }) => {
   });
 
   const [timeoutId, setTimeoutId] = useState(null);
+  const [redirectMessage, setRedirectMessage] = useState(''); // Додайте стан для повідомлення
 
   useEffect(() => {
     const handleUserActivity = () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      // Встановлюємо новий таймер на 1 годину
-      const newTimeoutId = setTimeout(logout, 3600000); // 1 година
+
+      const newTimeoutId = setTimeout(logout, 3600000);
       setTimeoutId(newTimeoutId);
     };
 
-    // Додаємо обробники подій для активності користувача
     window.addEventListener("mousemove", handleUserActivity);
     window.addEventListener("keypress", handleUserActivity);
 
-    // Повертаємо функцію для очищення обробників подій
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("mousemove", handleUserActivity);
@@ -43,14 +42,14 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("sessionStart");
-    // Очищуємо таймер
+
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, redirectMessage, setRedirectMessage }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import Header from "../components/Component/Header";
 import Footer from "../components/Component/Footer";
 import Categories from "../components/Categories";
+import { AuthContext } from "../contexts/AuthContext";
 import "../styles/ProductCard.css";
 import "../styles/HomePage.css";
 
@@ -13,6 +14,7 @@ export default function HomePage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [loading, setLoading] = useState(true);
+  const { redirectMessage, setRedirectMessage } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +34,16 @@ export default function HomePage() {
     };
 
     fetchData();
-  }, []);
+
+    if (redirectMessage) {
+      const timer = setTimeout(() => {
+        setRedirectMessage('');
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+    
+  }, [redirectMessage, setRedirectMessage]);
 
   const handleCategoryClick = (category_id) => {
     setSelectedCategoryId(category_id);
@@ -55,6 +66,7 @@ export default function HomePage() {
 
   return (
     <div className="page">
+        {redirectMessage && <p className="redirect-message">{redirectMessage}</p>}
        <Header onSearch={handleSearchResults} />
       <div className="home-page-main-content">
           <div className="mt-4">

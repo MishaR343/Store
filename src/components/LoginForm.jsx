@@ -1,16 +1,16 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext"; // Імпортуємо AuthContext
+import { AuthContext } from "../contexts/AuthContext";
 import PropTypes from "prop-types";
 import "../styles/LoginForm.css";
-import ChangePasswordModal from "./Component/ChangePasswordModal"; // Імпортуємо ChangePasswordModal
+import ChangePasswordModal from "./Component/ChangePasswordModal";
 import axios from 'axios';
 
 const LoginForm = ({ onClose }) => {
-  const { login } = useContext(AuthContext); // Отримуємо функцію login із контексту
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isModalOpen, setModalOpen] = useState(false); // Додали стан для модального вікна
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,11 +40,11 @@ const LoginForm = ({ onClose }) => {
   };
   
   const handleOpenModal = () => {
-    setModalOpen(true); // Відкриваємо модальне вікно
+    setModalOpen(true);
   };
   
   const handleCloseModal = () => {
-    setModalOpen(false); // Закриваємо модальне вікно
+    setModalOpen(false);
   };
   
   return (
@@ -74,7 +74,6 @@ const LoginForm = ({ onClose }) => {
         {errorMessage && <p className="login-error-message">{errorMessage}</p>}
         <button type="submit" className="login-submit-button">Увійти</button>
       </form>
-      {/* Додаємо посилання "Забули пароль?" */}
       <div className="login-form-footer">
         <p>
           <button onClick={handleOpenModal} className="reset-password-button">
@@ -82,7 +81,7 @@ const LoginForm = ({ onClose }) => {
           </button>
         </p>
       </div>
-      {isModalOpen && <ChangePasswordModal onClose={handleCloseModal} />} {/* Відображення модального вікна */}
+      {isModalOpen && <ChangePasswordModal onClose={handleCloseModal} />}
     </div>
   );
 };

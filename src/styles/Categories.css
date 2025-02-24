@@ -1,6 +1,4 @@
-/* Categories.css */
-
-.categories-container {
+  .categories-container {
     position: static;
     height: auto;
     overflow-y: auto; 

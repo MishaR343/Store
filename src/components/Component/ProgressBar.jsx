@@ -23,7 +23,6 @@ function ProgressBar({ currentStep, totalSteps }) {
   );
 }
 
-// Перевірка пропсів
 ProgressBar.propTypes = {
   currentStep: PropTypes.number.isRequired,
   totalSteps: PropTypes.number.isRequired,

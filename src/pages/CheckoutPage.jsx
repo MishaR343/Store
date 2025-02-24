@@ -10,7 +10,6 @@ import ProgressBar from '../components/Component/ProgressBar';
 import CartStep from './StepComponent/CartStep';
 import ContactStep from './StepComponent/ContactStep';
 import ShippingStep from './StepComponent/ShippingStep';
-import PaymentStep from './StepComponent/PaymentStep';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CheckoutPage.css';
@@ -33,6 +32,7 @@ function CheckoutPage() {
   const { user } = useContext(AuthContext);
   const [cart, setCart] = useState([]);
   const [step, setStep] = useState(1);
+  const { setRedirectMessage } = useContext(AuthContext);
   const [stripeToken, setStripeToken] = useState(null); 
 
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -43,7 +43,7 @@ function CheckoutPage() {
 
   const methods = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange", // Дозволяє валідацію в реальному часі
+    mode: "onChange",
   });
   const { formState: { isValid } } = methods;
   
@@ -51,7 +51,8 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (!user) {
-      setMessage('Будь ласка, увійдіть, щоб продовжити оформлення замовлення.');
+      setRedirectMessage('Будь ласка, увійдіть, щоб продовжити оформлення замовлення.');
+      navigate('/');
       return;
     }
     const fetchCart = async () => {
@@ -63,7 +64,7 @@ function CheckoutPage() {
       }
     };
     fetchCart();
-  }, [user]);
+  }, [user, navigate, setRedirectMessage]);
 
   useEffect(() => {
     if (!user) return;
@@ -108,7 +109,6 @@ function CheckoutPage() {
     setStep(step + 1);
   };
   
-
   const handlePrev = () => {
     setMessage('');
     setStep(step - 1);
@@ -120,7 +120,7 @@ function CheckoutPage() {
       return;
     }
     try {
-      await axios.delete(`${baseUrl}/api/cart/${user.id}/${productId}`);
+      await axios.delete(`${baseUrl}/api/cart/rm/${cart[0]?.cart_id}/${productId}`);
       const updatedCart = await axios.get(`${baseUrl}/api/cart/${user.id}`);
       setCart(updatedCart.data);
     } catch (error) {
@@ -140,7 +140,6 @@ function CheckoutPage() {
       return;
     }
     
-  
     const { token, error } = await stripe.createToken(cardElement);
     if (error) {
       setMessage(`Помилка оплати: ${error.message}`);
@@ -148,11 +147,35 @@ function CheckoutPage() {
     }
     setStripeToken(token.id);
   };
-  
-  const handleSubmit = async (data) => {
+
+  const handlePayment = async (order_id) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ order_id: order_id }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Помилка при створенні платіжної сесії.");
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      setMessage(error.message || "Помилка з'єднання з сервером.");
+    }
+    setCart([]);
+  };
+
+  const handleSubmit = async () => {
     if (!user || !cart.length) {
       setMessage('Кошик порожній або користувач не увійшов в систему.');
-      navigate('/cart/confirmation-page');
       return;
     }
   
@@ -162,8 +185,7 @@ function CheckoutPage() {
       setMessage('Платіжна система ще не завантажена. Спробуйте ще раз пізніше.');
       return;
     }
-    
-  
+
     try {
       const response = await axios.post(`${baseUrl}/api/orders`, {
         user_id: user.id,
@@ -173,22 +195,19 @@ function CheckoutPage() {
         contactPhone: methods.watch('contactPhone'),
         shippingAddress: methods.watch('shippingAddress'),
         shippingCity: methods.watch('shippingCity'),
-        shippingMethod: methods.watch('shippingMethod'),
-        payment_token: stripeToken, 
-        payment_method_id: parseInt(methods.watch('paymentMethodId'))
+        shippingMethod: methods.watch('shippingMethod')
       });
-  
+
       setMessage(response.data.message);
-      setCart([]);
-      setStep(totalSteps);
+
+      if (response.data.order_id) {
+        handlePayment(response.data.order_id);
+        throw new Error("Сервер не повернув order_id");
+      }
     } catch (error) {
       setMessage(error.response?.data?.error || 'Не вдалося оформити замовлення. Спробуйте ще раз.');
     }
   };
-  
-
-
-  
 
   const renderStep = () => {
     switch (step) {
@@ -196,11 +215,16 @@ function CheckoutPage() {
         return <CartStep cart={cart} removeFromCart={removeFromCart} totalPrice={totalPrice} />;
       case 2:
         return <ContactStep />;
-        case 3:
-          return <ShippingStep />;
-          case 4:
-            console.log()
-        return <PaymentStep paymentMethods={paymentMethods} onTokenization={handleTokenization}/>;
+      case 3:
+        return <ShippingStep />;
+      case 4:
+        return (
+          <div className="payment-step">
+            <h2>Оплата</h2>
+            <CardElement />
+            <button onClick={handleSubmit}>Оформити замовлення</button>
+          </div>
+        );
       default:
         return null;
     }
@@ -226,9 +250,7 @@ function CheckoutPage() {
           <div className="step-buttons">
             {step > 1 && 
               <button onClick={handlePrev} className="prev-button">Назад</button>}
-            {isLastStep ? (
-              <button onClick={handleSubmit} className="next-button">Оформити замовлення</button>
-            ) : (
+            {!isLastStep && (
               <button onClick={handleNext} disabled={isValid} className="next-button"> Далі </button>
             )}
           </div>

@@ -7,6 +7,7 @@
     npm install @stripe/stripe-js
     npm install @stripe/react-stripe-js
     npm install react-hook-form @hookform/resolvers yup
+    npm install stripe
 
 
 docker 

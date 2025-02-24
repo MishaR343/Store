@@ -6,15 +6,14 @@ import "../../styles/AuthModal.css";
 
 const AuthModal = ({ isOpen, onClose, authMode, setAuthMode, onAuthSuccess }) => {
   useEffect(() => {
+    
     if (isOpen) {
-      // Додати клас для блокування прокрутки
       document.body.classList.add("body-no-scroll");
+
     } else {
-      // Видалити клас при закритті
       document.body.classList.remove("body-no-scroll");
     }
-
-    // Прибираємо клас при демонтажі компонента
+    
     return () => {
       document.body.classList.remove("body-no-scroll");
     };

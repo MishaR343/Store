@@ -11,22 +11,23 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { setRedirectMessage } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      setError("User is not logged in");
-      setLoading(false);
+      setRedirectMessage('Будь ласка, увійдіть, щоб продовжити оформлення замовлення.');
+      navigate('/'); // перенаправлення на домашню сторінку
       return;
     }
-    
+  
     const fetchCartItems = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/cart/${user.id}`);
-        setCartItems(response.data.map(item => ({ 
-          ...item, 
+        setCartItems(response.data.map(item => ({
+          ...item,
           quantity: item.quantity || 1,
-          image_base64: item.image_base64 && Array.isArray(item.image_base64) ? item.image_base64[0] : item.image_base64 || "" 
+          image_base64: item.image_base64 && Array.isArray(item.image_base64) ? item.image_base64[0] : item.image_base64 || ""
         })));
       } catch (err) {
         setError(err.message);
@@ -34,23 +35,45 @@ export default function CartPage() {
         setLoading(false);
       }
     };
-
+  
     fetchCartItems();
-  }, [user]);
+  }, [user, navigate]);
 
-  const handleQuantityChange = (productId, amount) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === productId 
-          ? { ...item, quantity: Math.max(1, (item.quantity || 1) + amount) }
-          : item
-      )
-    );
+  const handleQuantityChange = async (productId, amount) => {
+
+    const updatedItem = cartItems.find(item => item.id === productId);
+    if (!updatedItem) return;
+    
+    const newQuantity = Math.max(1, (updatedItem.quantity + amount));
+    console.log(user.id, productId, newQuantity);
+
+    try {
+      const response = await axios.put('http://localhost:5000/api/cart/update-quantity', {
+        user_id: parseInt(user.id),
+        product_id: parseInt(productId),
+        quantity: parseInt(newQuantity)
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+
+      if (response.status === 200) {
+        setCartItems(prevItems =>
+          prevItems.map(item =>
+            item.id === productId ? { ...item, quantity: newQuantity } : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error.message);
+    }
   };
 
-  const handleRemoveFromCart = async (userId, productId) => {
+  const handleRemoveFromCart = async (cartId, productId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/cart/${userId}/${productId}`);
+      const response = await axios.delete(`http://localhost:5000/api/cart/rm/${cartId}/${productId}`);
       if (response.status === 200) {
         setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
       }
@@ -60,7 +83,7 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    navigate('/cart/checkout'); // Використання navigate для переходу
+    navigate('/cart/checkout');
   };
 
   if (loading) return <div>Завантаження...</div>;
@@ -89,7 +112,7 @@ export default function CartPage() {
                     <span className="quantity-text">{item.quantity}</span>
                     <button className="quantity-button" onClick={() => handleQuantityChange(item.id, 1)}>+</button>
                   </div>
-                  <button onClick={() => handleRemoveFromCart(user.id, item.id)} className="remove-from-cart-button">Видалити</button>
+                  <button onClick={() => handleRemoveFromCart(item.cart_id, item.id)} className="remove-from-cart-button">Видалити</button>
                 </div>
               </div>
             ))

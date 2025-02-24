@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/WarningModal.css'; // Додайте стилі для модального вікна
+import '../../styles/WarningModal.css';
 
 const WarningModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

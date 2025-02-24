@@ -17,8 +17,10 @@ function CartStep({ cart, removeFromCart, totalPrice }) {
                 className="cart-item-image"
               />
               <div className="cart-item-details">
-                <h3>{item.name}</h3>
-                <p>Ціна: ${parseFloat(item.price).toFixed(2)}</p>
+                {console.log(item)}
+                <h3>{item.quantity} x {item.name}</h3>
+                <h2></h2>
+                <p>Ціна: ${parseFloat(item.price).toFixed(2) * item.quantity}</p>
                 <button onClick={() => removeFromCart(item.id)} className="remove-button">
                   Видалити
                 </button>
@@ -32,7 +34,6 @@ function CartStep({ cart, removeFromCart, totalPrice }) {
   );
 }
 
-// Визначення PropTypes
 CartStep.propTypes = {
   cart: PropTypes.arrayOf(
     PropTypes.shape({

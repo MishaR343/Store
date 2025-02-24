@@ -8,7 +8,7 @@ const RegistrationForm = ({ onClose, onRegisterSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [phone, setPhone] = useState('');  // Додано для телефону
+  const [phone, setPhone] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   
   const handleSubmit = async (event) => {
@@ -37,8 +37,8 @@ const RegistrationForm = ({ onClose, onRegisterSuccess }) => {
   
       if (data.success) {
         alert('Реєстрація пройшла успішно');
-        onRegisterSuccess(); // Відкриваємо вікно входу після успішної реєстрації
-        onClose(); // Закриваємо модальне вікно реєстрації
+        onRegisterSuccess();
+        onClose();
       } else {
         setErrorMessage(`Помилка реєстрації: ${data.message}`);
       }
@@ -108,7 +108,6 @@ const RegistrationForm = ({ onClose, onRegisterSuccess }) => {
   );
 };
 
-// Добавляємо валідацію пропсів
 RegistrationForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onRegisterSuccess: PropTypes.func.isRequired

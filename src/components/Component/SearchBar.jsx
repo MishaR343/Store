@@ -18,7 +18,7 @@ const SearchBar = ({ onSearch }) => {
         console.error('Помилка пошуку:', error);
       }
     } else {
-      // Якщо поле пусте, повертаємо всі товари
+
       try {
         const response = await axios.get('http://localhost:5000/api/products');
         onSearch(response.data);

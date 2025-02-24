@@ -1,4 +1,3 @@
-/* Основний стиль для хедера */
 .header {
   background-color: #fff;
   padding: 10px 20px;
@@ -10,7 +9,6 @@
   z-index: 1000;
 }
 
-/* Верхній банер */
 .top-banner {
   background-color: #ffcc00;
   text-align: center;
@@ -19,7 +17,6 @@
   color: #fff;
 }
 
-/* Контейнер */
 .container {
   display: flex;
   align-items: center;
@@ -30,7 +27,6 @@
   width: 100%;
 }
 
-/* Логотип */
 .logo-container {
   display: flex;
   align-items: center;
@@ -40,7 +36,6 @@
   height: 50px;
 }
 
-/* Пошуковий блок */
 .search-box {
   display: flex;
   align-items: center;
@@ -67,7 +62,6 @@
   background-color: #ff9900;
 }
 
-/* Навігаційне меню */
 .nav {
   padding: 10px 0;
   margin-top: 10px;
@@ -94,7 +88,6 @@
   background-color: #ff9900;
 }
 
-/* Іконки */
 .icon-container {
   display: flex;
   align-items: center;
@@ -110,7 +103,6 @@
   height: 24px;
 }
 
-/* ---- СТИЛІ ДЛЯ КНОПОК АУТЕНТИФІКАЦІЇ ---- */
 .auth-buttons-container {
   display: flex;
   justify-content: flex-end;

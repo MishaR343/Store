@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+  
+  //(Зміна пароля проходить тестування) (Додати перевірку пошти на аутифікацію користувача)
+
+  import React, { useState } from "react";
 import PropTypes from "prop-types";
 import axios from 'axios';
 import "../../styles/ChangePasswordModal.css";
 
-
 const ChangePasswordModal = ({ onClose }) => {
-  const [userId, setUserId] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -14,10 +15,11 @@ const ChangePasswordModal = ({ onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    const passwordData = { user_id: userId, old_password: oldPassword, new_password: newPassword };
+    const passwordData = { email: email, new_password: newPassword };
   
     try {
-      const response = await axios.put("http://localhost:5000/api/change-password", passwordData, {
+      const response = await axios.put("http://localhost:5000/api/change-password",
+       passwordData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -37,7 +39,6 @@ const ChangePasswordModal = ({ onClose }) => {
       setErrorMessage("Сталася помилка при зміні пароля");
     }
   };
-  
 
   return (
     <>
@@ -47,22 +48,12 @@ const ChangePasswordModal = ({ onClose }) => {
       <h2>Змінити пароль</h2>
       <form onSubmit={handleSubmit}>
         <div className="change-password-form-group">
-          <label htmlFor="userId">ID Користувача:</label>
+          <label htmlFor="email">Email Користувача:</label>
           <input
             type="text"
-            id="userId"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
-          />
-        </div>
-        <div className="change-password-form-group">
-          <label htmlFor="oldPassword">Старий пароль:</label>
-          <input
-            type="password"
-            id="oldPassword"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
+            email="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>

@@ -1,178 +1,168 @@
-/* ---- МОДАЛЬНЕ ВІКНО ДЛЯ АВТОРИЗАЦІЇ ТА РЕЄСТРАЦІЇ ---- */
 .auth-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgb(255, 255, 255);
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    z-index: 1050;
-    width: 100%;
-    max-width: fit-content;
-    text-align: center;
-  }
-
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* З затемненням */
-    z-index: 1049; /* Поставити за модальне вікно */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgb(255, 255, 255);
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1050;
+  width: 100%;
+  max-width: fit-content;
+  text-align: center;
 }
 
-/* Додай цей стиль у CSS файл */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+}
+
 .body-no-scroll {
-    overflow: hidden;
+  overflow: hidden;
 }
 
-  /* ---- Заголовок модального вікна ---- */
-  .auth-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .auth-modal-header h2 {
-    margin: 0;
-    font-size: 22px;
-  }
-  
-  .auth-modal-tabs {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 15px;
-  }
-  
-  .auth-tab {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
-  }
-  
-  .auth-tab.active {
-    color: #007bff;
-    border-bottom: 3px solid #007bff;
-  }
+.auth-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  .auth-modal-close {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    color: #333;
-    transition: color 0.3s ease, transform 0.2s ease;
-    position: absolute; /* Для позиціонування кнопки закриття */
-    top: 15px;
-    right: 15px;
+.auth-modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.auth-modal-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.auth-tab.active {
+  color: #007bff;
+  border-bottom: 3px solid #007bff;
+}
+
+.auth-modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease, transform 0.2s ease;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.auth-modal-close:hover {
+  color: #ff4d4d;
+  transform: rotate(90deg);
+}
+
+.auth-switch {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.auth-switch button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.auth-switch .active {
+  color: #007bff;
+  border-bottom: 3px solid #007bff;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.auth-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.auth-error-message {
+  color: #d9534f;
+  font-size: 14px;
+  text-align: left;
+}
+
+.auth-submit {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.auth-submit:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.auth-submit:active {
+  background-color: #004494;
+  transform: scale(0.98);
+}
+
+.auth-toggle-link {
+  font-size: 14px;
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.auth-toggle-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .auth-modal {
+    width: 90%;
+    padding: 20px;
   }
-  
-  .auth-modal-close:hover {
-    color: #ff4d4d;
-    transform: rotate(90deg);
-  }
-  
-  /* ---- Перемикання між входом та реєстрацією ---- */
-  .auth-switch {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .auth-switch button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
-  }
-  
-  .auth-switch .active {
-    color: #007bff;
-    border-bottom: 3px solid #007bff;
-  }
-  
-  /* ---- Форми входу та реєстрації ---- */
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .auth-input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    width: 100%;
-    transition: border-color 0.3s ease;
-  }
-  
-  .auth-input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  /* ---- Повідомлення про помилку ---- */
-  .auth-error-message {
-    color: #d9534f;
-    font-size: 14px;
-    text-align: left;
-  }
-  
-  /* ---- Кнопка відправки ---- */
-  .auth-submit {
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .auth-submit:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
-  .auth-submit:active {
-    background-color: #004494;
-    transform: scale(0.98);
-  }
-  
-  /* ---- Посилання для зміни форми ---- */
-  .auth-toggle-link {
-    font-size: 14px;
-    color: #007bff;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  
-  .auth-toggle-link:hover {
-    color: #0056b3;
-    text-decoration: underline;
-  }
-  
-  /* ---- Адаптивність ---- */
-  @media (max-width: 480px) {
-    .auth-modal {
-      width: 90%;
-      padding: 20px;
-    }
-  }
-  
+}

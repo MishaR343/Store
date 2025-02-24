@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { AuthContext } from "../../contexts/AuthContext";
 import SearchBar from "./SearchBar";
 import AuthModal from "./AuthModal";
-import WarningModal from "./WarningModal"; // Імпортуємо WarningModal
+import WarningModal from "./WarningModal";
 import "../../styles/Header.css";
 
 const Header = ({ onSearch }) => {
@@ -31,8 +31,8 @@ const Header = ({ onSearch }) => {
 
   const handleCartClick = (event) => {
     if (!user) {
-      event.preventDefault(); // Зупинити перехід за посиланням
-      setIsWarningModalOpen(true); // Відкрити попереджувальне вікно
+      event.preventDefault();
+      setIsWarningModalOpen(true);
     }
   };
 
@@ -54,7 +54,6 @@ const Header = ({ onSearch }) => {
           )}
         </div>
       </div>
-
       <div className="nav-container">
         <ul className="nav-list">
           <li><a href="/" className="nav-item home">Головна</a></li>
@@ -66,7 +65,6 @@ const Header = ({ onSearch }) => {
       <div className="search-container styled-search">
         <SearchBar onSearch={onSearch} />
       </div>
-
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={handleCloseAuthModal}
@@ -74,7 +72,6 @@ const Header = ({ onSearch }) => {
         setAuthMode={setAuthMode}
         onAuthSuccess={handleLoginSuccess}
       />
-
       <WarningModal
         isOpen={isWarningModalOpen}
         onClose={handleCloseWarningModal}

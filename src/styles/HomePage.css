@@ -1,7 +1,5 @@
-/* HomePage.css */
-
 .home-page-main-content {
-  margin-top: 80px; /* Такий самий відступ, як висота хедера */
+  margin-top: 80px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -21,4 +19,21 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+}
+
+.redirect-message {
+  background-color: rgba(248, 215, 218, 0.9);
+  color: #721c24;
+  padding: 15px 20px;
+  margin: 15px 20px;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  opacity: 1;
+  transition: opacity 0.5s, transform 0.5s;
+  transform: translateY(-10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
