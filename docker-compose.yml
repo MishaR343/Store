@@ -1,12 +1,28 @@
 version: '3.8'
 
 services:
-  main:
-    container_name: main
+  frontend:
+    container_name: frontend
+    build: 
+      context: ./frontend
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - .:/appFrontend
+      - /appFrontend/node_modules
+    ports:
+      - 3000:3000
+    command: npm start
+    depends_on:
+      - api
+    restart: always
+
+  api:
+    container_name: backend
     build: 
       context: ./backend
     env_file:
-      - .env
+      - ./backend/.env
     volumes:
       - .:/appBackend
       - /appBackend/node_modules
@@ -17,14 +33,15 @@ services:
     depends_on:
       - postgres
     restart: always
+
   postgres:
-    image: postgres:latest
+    image: postgres:17.4
     container_name: mydb2
     restart: always
     environment:
+      POSTGRES_DB: mydb
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
     ports:
       - "5432:5432"
     volumes:
