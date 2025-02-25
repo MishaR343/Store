@@ -1,9 +1,25 @@
 version: '3.8'
 
 services:
+  main:
+    container_name: main
+    build: 
+      context: ./backend
+    env_file:
+      - .env
+    volumes:
+      - .:/appBackend
+      - /appBackend/node_modules
+    ports:
+      - 5000:5000
+      - 9229:9229
+    command: node server.js
+    depends_on:
+      - postgres
+    restart: always
   postgres:
     image: postgres:latest
-    container_name: mydb
+    container_name: mydb2
     restart: always
     environment:
       POSTGRES_USER: user

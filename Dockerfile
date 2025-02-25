@@ -2,7 +2,8 @@
 FROM node:22.14
 
 # Встановлюємо робочу директорію в контейнері
-WORKDIR /appBackend
+WORKDIR /appFrontend
+
 # Копіюємо файли package.json і package-lock.json для встановлення залежностей
 COPY package*.json ./
 
@@ -13,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Вказуємо порт, на якому працюватиме сервер
-EXPOSE 5000
+EXPOSE 3000
 
 # Запускаємо сервер
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

@@ -11,7 +11,8 @@
 
 
 docker 
-    docker exec -it mydb psql -U user -d mydb 
+    docker exec -it nice_shaw psql -U user -d mydb
+ 
 
 
 Basa 

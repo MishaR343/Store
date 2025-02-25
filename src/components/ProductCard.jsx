@@ -16,12 +16,20 @@ const ProductCard = ({ id }) => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/${id}`);
         setProduct(response.data);
+
+        // Check if the product is already in the user's cart
+        if (user) {
+          const cartResponse = await axios.get(`http://localhost:5000/api/cart/${user.id}`);
+          console.log(cartResponse.data);
+          const isProductInCart = cartResponse.data.some(item => item.id === id);
+          setAddedToCart(isProductInCart);
+        }
       } catch (err) {
         console.log(err.message);
       }
     };
     fetchProduct();
-  }, [id]);
+  }, [id, user]);
 
   const handleClick = () => {
     navigate(`/product/${id}`);
@@ -40,7 +48,7 @@ const ProductCard = ({ id }) => {
         user_id: user.id,
       });
       if (response.status === 201) {
-        setAddedToCart(true);
+        setAddedToCart(true); // Mark the product as added to the cart
       }
     } catch (err) {
       console.error("Помилка при додаванні товару в кошик", err);

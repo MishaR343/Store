@@ -17,7 +17,7 @@ export default function CartPage() {
   useEffect(() => {
     if (!user) {
       setRedirectMessage('Будь ласка, увійдіть, щоб продовжити оформлення замовлення.');
-      navigate('/'); // перенаправлення на домашню сторінку
+      navigate('/');
       return;
     }
   
@@ -37,8 +37,7 @@ export default function CartPage() {
     };
   
     fetchCartItems();
-  }, [user, navigate]);
-
+  }, [user, navigate, setRedirectMessage]);
   const handleQuantityChange = async (productId, amount) => {
 
     const updatedItem = cartItems.find(item => item.id === productId);
