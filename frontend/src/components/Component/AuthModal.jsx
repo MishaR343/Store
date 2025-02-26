@@ -4,16 +4,16 @@ import LoginForm from "../LoginForm";
 import RegistrationForm from "../RegistrationForm";
 import "../../styles/AuthModal.css";
 
-const AuthModal = ({ isOpen, onClose, authMode, setAuthMode, onAuthSuccess }) => {
+const AuthModal = ({ isOpen, onClose, authMode, setAuthMode }) => {
   useEffect(() => {
-    
+
     if (isOpen) {
       document.body.classList.add("body-no-scroll");
 
     } else {
       document.body.classList.remove("body-no-scroll");
     }
-    
+
     return () => {
       document.body.classList.remove("body-no-scroll");
     };
@@ -46,9 +46,9 @@ const AuthModal = ({ isOpen, onClose, authMode, setAuthMode, onAuthSuccess }) =>
         </div>
         <div className="auth-content">
           {authMode === "login" ? (
-            <LoginForm onClose={onClose} onLoginSuccess={onAuthSuccess} />
+            <LoginForm onClose={onClose} />
           ) : (
-            <RegistrationForm onClose={onClose} onRegisterSuccess={onAuthSuccess} />
+            <RegistrationForm onClose={onClose} />
           )}
         </div>
       </div>

@@ -7,7 +7,7 @@ import WarningModal from "./WarningModal";
 import "../../styles/Header.css";
 
 const Header = ({ onSearch }) => {
-  const { user, login, logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
@@ -22,11 +22,6 @@ const Header = ({ onSearch }) => {
 
   const handleCloseAuthModal = () => {
     setIsAuthModalOpen(false);
-  };
-
-  const handleLoginSuccess = (userName) => {
-    login({ name: userName });
-    handleCloseAuthModal();
   };
 
   const handleCartClick = (event) => {
@@ -70,7 +65,7 @@ const Header = ({ onSearch }) => {
         onClose={handleCloseAuthModal}
         authMode={authMode}
         setAuthMode={setAuthMode}
-        onAuthSuccess={handleLoginSuccess}
+        onAuthSuccess={handleCloseAuthModal}
       />
       <WarningModal
         isOpen={isWarningModalOpen}

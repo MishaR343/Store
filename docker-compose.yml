@@ -1,15 +1,13 @@
-version: '3.8'
 
 services:
   frontend:
     container_name: frontend
-    build: 
-      context: ./frontend
+    build: ./frontend
     env_file:
       - ./frontend/.env
     volumes:
-      - .:/appFrontend
-      - /appFrontend/node_modules
+      - .:/frontend
+      - /frontend/node_modules
     ports:
       - 3000:3000
     command: npm start
@@ -19,15 +17,15 @@ services:
 
   api:
     container_name: backend
-    build: 
-      context: ./backend
+    build: ./backend
     env_file:
       - ./backend/.env
     volumes:
-      - .:/appBackend
-      - /appBackend/node_modules
+      - .:/backend
+      - /backend/node_modules
     ports:
       - 5000:5000
+
       - 9229:9229
     command: node server.js
     depends_on:
@@ -37,6 +35,7 @@ services:
   postgres:
     image: postgres:17.4
     container_name: mydb2
+    build: .
     restart: always
     environment:
       POSTGRES_DB: mydb
@@ -46,6 +45,5 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-
 volumes:
   pgdata:
