@@ -10,14 +10,17 @@
     npm install stripe
 
 
-docker 
-    docker exec -it nice_shaw psql -U user -d mydb
- 
+docker bd
+    docker exec -it mydb2 psql -U user -d mydb
+
+docker hub
+    https://hub.docker.com/repository/docker/vitokornelius/onix-frontend.backend
+    docker pull vitokornelius/onix-frontend.backend:latest
 
 
-Basa 
+Basa
     http://localhost:5000/api/products
 
-Server 
+Server
     node server.js
     netstat -ano | findstr :5000
